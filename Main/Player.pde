@@ -1,6 +1,6 @@
 class Player {
   private static final float angleIncrement = .25;
-  private static final int FOV = 90;
+  private static final int FOV = 60;
   PVector pos;
   ArrayList<Ray> rays;
   float heading;
@@ -8,7 +8,7 @@ class Player {
   public Player() {
     pos = new PVector(width/2, height/2);
     rays = new ArrayList<Ray>();
-    for (float ang = -FOV / 2 ; ang < FOV / 2 ; ang += angleIncrement) {
+    for (float ang = -FOV / 2; ang < FOV / 2; ang += angleIncrement) {
       rays.add(new Ray(pos, radians(ang)));
     }
 
@@ -71,7 +71,7 @@ class Player {
 
   void rotate(float angle) {
     this.heading += angle;
-    for (int i = 0 ; i < rays.size() ; i++) {
+    for (int i = 0; i < rays.size(); i++) {
       rays.get(i).dir.rotate(angle);
     }
   }
@@ -83,7 +83,7 @@ class Player {
     horizontalVelocity.setMag(horizontal);
     pos.add(forwardsVelocity);
     pos.add(horizontalVelocity);
-    
+
     if (pos.x >= sceneW - 1) {
       pos.x = sceneW - 1;
     }

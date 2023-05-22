@@ -5,10 +5,11 @@ import processing.core.*;
 ArrayList<Wall> walls;
 Ray ray;
 Player player;
-Map map;
+int[][] map;
 int sceneW, sceneH;
 HashMap<Character, Boolean> keys;
 private PApplet applet;
+float speed = 1.5;
 
 
 void setup() {
@@ -21,43 +22,45 @@ void setup() {
   sceneW = width/2;
   sceneH = height;
 
-  walls = new ArrayList<Wall>(5);
-  //for (int i = 0; i < 5; i++) {
-  //  float x1 = random(sceneW);
-  //  float y1 = random(sceneH);
-  //  float x2 = random(sceneW);
-  //  float y2 = random(sceneH);
-  //  walls.add(new Wall(x1, y1, x2, y2));
-  //}
-  
+  walls = new ArrayList<Wall>();
+
   walls.add(new Wall(0, 0, sceneW, 0));
   walls.add(new Wall(sceneW, 0, sceneW, height));
   walls.add(new Wall(sceneW, height, 0, height));
   walls.add(new Wall(0, height, 0, 0));
 
-  int[][] temp = {
-  {0, 0, 1, 1, 0},
-  {0, 0, 0, 1, 0},
-  {1, 1, 0, 1, 0},
-  {0, 0, 0, 0, 0},
-  {0, 1, 0, 1, 1},
+  map = new int[][] {
+    {0, 0, 1, 1, 0},
+    {0, 0, 0, 1, 0},
+    {1, 1, 0, 1, 0},
+    {0, 0, 0, 0, 0},
+    {0, 1, 0, 1, 1}
   };
-  map = new Map(temp);
+
+  for (int i = 0; i < map.length; i++) {
+    for (int j = 0; j < map[i].length; j++) {
+      if (map[i][j] == 1) {
+        Block block = new Block(i * 100, j * 100);
+        for (Wall wall : block.walls) {
+          walls.add(wall); 
+        }
+      }
+    }
+  }
 
   player = new Player();
   player.update(100, 100);
 }
 
 void draw() {
-  background(255, 41, 255);
+  background(0);
 
 
   // show all walls
   for (Wall wall : walls) {
     wall.show();
   }
-  
-  map.show();
+
 
   player.show();
   ArrayList<Float> scene = player.cast(walls);
@@ -79,13 +82,13 @@ void draw() {
   }
   pop();
 
-  if (keys.containsKey('w') && keys.get('w')) player.move(3, 0);
-  if (keys.containsKey('s') && keys.get('s')) player.move(-3, 0);
-  if (keys.containsKey('a') && keys.get('a')) player.move(0, -3);
-  if (keys.containsKey('d') && keys.get('d')) player.move(0, 3);
+  if (keys.containsKey('w') && keys.get('w')) player.move(speed, 0);
+  if (keys.containsKey('s') && keys.get('s')) player.move(-speed, 0);
+  if (keys.containsKey('a') && keys.get('a')) player.move(0, -speed);
+  if (keys.containsKey('d') && keys.get('d')) player.move(0, speed);
   if (keys.containsKey('j') && keys.get('j')) player.rotate(-0.05);
   if (keys.containsKey('l') && keys.get('l')) player.rotate(0.05);
-  
+
   println(player.pos.x, player.pos.y);
 }
 
