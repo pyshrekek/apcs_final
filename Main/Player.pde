@@ -1,6 +1,6 @@
 class Player {
   private static final float angleIncrement = .25;
-  private static final int FOV = 40;
+  private static final int FOV = 90;
   PVector pos;
   ArrayList<Ray> rays;
   float heading;
@@ -48,7 +48,6 @@ class Player {
       // for each wall that a ray may/may not hit:
       for (Wall wall : walls) {
         intersect = ray.cast(wall);
-
         if (intersect != null) {
           float dist = dist(pos.x, pos.y, intersect.x, intersect.y);
           float ang = ray.dir.heading() - this.heading;

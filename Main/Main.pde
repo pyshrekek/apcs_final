@@ -5,9 +5,11 @@ import processing.core.*;
 ArrayList<Wall> walls;
 Ray ray;
 Player player;
+Map map;
 int sceneW, sceneH;
 HashMap<Character, Boolean> keys;
 private PApplet applet;
+
 
 void setup() {
   size(1600, 800);
@@ -20,32 +22,42 @@ void setup() {
   sceneH = height;
 
   walls = new ArrayList<Wall>(5);
-  for (int i = 0; i < 5; i++) {
-    float x1 = random(sceneW);
-    float y1 = random(sceneH);
-    float x2 = random(sceneW);
-    float y2 = random(sceneH);
-    walls.add(new Wall(x1, y1, x2, y2));
-  }
+  //for (int i = 0; i < 5; i++) {
+  //  float x1 = random(sceneW);
+  //  float y1 = random(sceneH);
+  //  float x2 = random(sceneW);
+  //  float y2 = random(sceneH);
+  //  walls.add(new Wall(x1, y1, x2, y2));
+  //}
+  
   walls.add(new Wall(0, 0, sceneW, 0));
   walls.add(new Wall(sceneW, 0, sceneW, height));
   walls.add(new Wall(sceneW, height, 0, height));
   walls.add(new Wall(0, height, 0, 0));
 
-
+  int[][] temp = {
+  {0, 0, 1, 1, 0},
+  {0, 0, 0, 1, 0},
+  {1, 1, 0, 1, 0},
+  {0, 0, 0, 0, 0},
+  {0, 1, 0, 1, 1},
+  };
+  map = new Map(temp);
 
   player = new Player();
   player.update(100, 100);
 }
 
 void draw() {
-  background(0);
+  background(255, 41, 255);
 
 
   // show all walls
   for (Wall wall : walls) {
     wall.show();
   }
+  
+  map.show();
 
   player.show();
   ArrayList<Float> scene = player.cast(walls);
