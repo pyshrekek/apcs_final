@@ -1,6 +1,6 @@
 class Player {
   private static final float ANGLE_INCREMENT = .25;
-  private static final int FOV = 60;
+  private static final int FOV = 90;
   private static final float DIST = 50;
   private static final float SCREEN_WIDTH = 1600;
   private static final float SCREEN_HEIGHT = 900;
@@ -10,15 +10,16 @@ class Player {
   PVector pos;
   ArrayList<Ray> rays;
   float heading;
-  
+
 
   public Player() {
     pos = new PVector(width/2, height/2);
     rays = new ArrayList<Ray>();
     for (float ang = -FOV / 2; ang < FOV / 2; ang += ANGLE_INCREMENT) {
-      float newAng = atan(((SEG_LEN * ang - SCREEN_HALFLEN) / DIST));
-      rays.add(new Ray(pos, radians(ang)));
+      float newAng = atan(radians((ang - HALF_WIDTH) / DIST));
+      rays.add(new Ray(pos, newAng));
     }
+   
 
     heading = 0;
   }

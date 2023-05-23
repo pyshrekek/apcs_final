@@ -27,6 +27,7 @@ class Ray {
   
   // https://stackoverflow.com/questions/24173966/raycasting-engine-rendering-creating-slight-distortion-increasing-towards-edges
   // https://stackoverflow.com/questions/66644579/how-do-i-fix-warped-walls-in-my-raycaster
+  // https://gamedev.stackexchange.com/questions/156842/how-can-i-correct-an-unwanted-fisheye-effect-when-drawing-a-scene-with-raycastin
 
   PVector cast(Wall wall) {
     // wall bounds
