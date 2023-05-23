@@ -24,6 +24,9 @@ class Ray {
     line(0, 0, dir.x * 10, dir.y * 10);
     popMatrix();
   }
+  
+  // https://stackoverflow.com/questions/24173966/raycasting-engine-rendering-creating-slight-distortion-increasing-towards-edges
+  // https://stackoverflow.com/questions/66644579/how-do-i-fix-warped-walls-in-my-raycaster
 
   PVector cast(Wall wall) {
     // wall bounds
