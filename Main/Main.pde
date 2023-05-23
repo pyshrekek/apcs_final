@@ -13,7 +13,7 @@ float speed = 1.5;
 
 
 void setup() {
-  size(1600, 800);
+  size(1600, 900);
 
   this.applet = this;
   applet.registerMethod("keyEvent", this);
