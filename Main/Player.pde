@@ -1,27 +1,20 @@
 class Player {
   private static final float ANGLE_INCREMENT = .25;
-  private static final int FOV = 90;
-  private static final float DIST = 50;
-  private static final float SCREEN_WIDTH = 1600;
-  private static final float SCREEN_HEIGHT = 900;
-  private static final float HALF_WIDTH = 800;
-  float SCREEN_HALFLEN = DIST * tan(FOV/2);
-  float SEG_LEN = SCREEN_HALFLEN / (SCREEN_WIDTH/2);
-  PVector pos;
+  private static final int FOV = 40;
+  PVector pos, forward, right;
   ArrayList<Ray> rays;
   float heading;
 
 
   public Player() {
     pos = new PVector(width/2, height/2);
+    forward = new PVector();
+    right = new PVector();
     rays = new ArrayList<Ray>();
-    for (float ang = -FOV / 2; ang < FOV / 2; ang += ANGLE_INCREMENT) {
-      float newAng = atan(radians((ang - HALF_WIDTH) / DIST));
-      rays.add(new Ray(pos, newAng));
-    }
-   
-
     heading = 0;
+    for (float ang = -FOV / 2; ang < FOV / 2; ang += ANGLE_INCREMENT) {
+      rays.add(new Ray(pos, radians(ang)));
+    }
   }
 
   void update(float x, float y) {
@@ -105,5 +98,11 @@ class Player {
     if (pos.y <= 1) {
       pos.y = 1;
     }
+  }
+
+  void collis() {
+     for (Block b : Main.blocks) {
+       
+     }
   }
 }

@@ -2,18 +2,22 @@ import processing.event.KeyEvent;
 import java.util.HashMap;
 import processing.core.*;
 
+
+static int[][] map;
+static float speed = 1.5;
+
 ArrayList<Wall> walls;
+ArrayList<Block> blocks;
 Ray ray;
 Player player;
-int[][] map;
 int sceneW, sceneH;
 HashMap<Character, Boolean> keys;
 private PApplet applet;
-float speed = 1.5;
+
 
 
 void setup() {
-  size(1600, 900);
+  size(1600, 800);
 
   this.applet = this;
   applet.registerMethod("keyEvent", this);
@@ -23,6 +27,7 @@ void setup() {
   sceneH = height;
 
   walls = new ArrayList<Wall>();
+  blocks = new ArrayList<Block>();
 
   walls.add(new Wall(0, 0, sceneW, 0));
   walls.add(new Wall(sceneW, 0, sceneW, height));
@@ -30,20 +35,24 @@ void setup() {
   walls.add(new Wall(0, height, 0, 0));
 
   map = new int[][] {
-    {0, 0, 1, 1, 0},
-    {0, 0, 0, 1, 0},
-    {1, 1, 0, 1, 0},
-    {0, 0, 0, 0, 0},
-    {0, 1, 0, 1, 1}
+    {0, 0, 1, 0, 0, 0, 0, 1},
+    {0, 0, 0, 1, 1, 1, 0, 1},
+    {1, 1, 0, 1, 1, 0, 0, 1},
+    {0, 0, 0, 0, 0, 0, 0, 1},
+    {0, 1, 0, 1, 1, 1, 0, 1},
+    {0, 1, 0, 1, 1, 1, 0, 0},
+    {0, 1, 0, 0, 0, 0, 0, 0},
+    {0, 1, 0, 0, 0, 0, 0, 1},
   };
 
   for (int i = 0; i < map.length; i++) {
     for (int j = 0; j < map[i].length; j++) {
-      if (map[i][j] == 1) {
+      if (map[j][i] == 1) {
         Block block = new Block(i * 100, j * 100);
         for (Wall wall : block.walls) {
-          walls.add(wall); 
+          walls.add(wall);
         }
+        blocks.add(block);
       }
     }
   }
@@ -73,7 +82,7 @@ void draw() {
     noStroke();
     float sq = scene.get(i)*scene.get(i);
     float widthSq = (sceneW)*(sceneW);
-    float fill = map(sq, 0, widthSq, 255, 0);
+    float fill = map(sq, 0, widthSq, 230, 0);
     float h = map(scene.get(i), 0, sceneW + 1, height, 0);
     fill(fill);
     rectMode(CENTER);

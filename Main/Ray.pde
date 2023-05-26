@@ -16,6 +16,11 @@ class Ray {
     pos = v;
     dir = new PVector(cos(angle), sin(angle));
   }
+  
+  public Ray(PVector v, PVector head) {
+    pos = v;
+    dir = head;
+  }
 
   void show() {
     stroke(255, 100);
