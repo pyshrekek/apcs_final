@@ -99,10 +99,12 @@ class Player {
       pos.y = 1;
     }
   }
-
-  void collis() {
-     for (Block b : Main.blocks) {
-       
-     }
+  
+  void collis(ArrayList<Block> blocks) {
+    for (Block b : blocks) {
+      if (b.withinBlock(player) != null) {
+        // get closest edge and teleport player to that
+      }
+    }
   }
 }

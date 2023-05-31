@@ -98,7 +98,11 @@ void draw() {
   if (keys.containsKey('j') && keys.get('j')) player.rotate(-0.05);
   if (keys.containsKey('l') && keys.get('l')) player.rotate(0.05);
 
-  println(player.pos.x, player.pos.y);
+  Block inThis;
+  for (Block b : blocks) {
+    inThis = b.withinBlock(player);
+    print(inThis);
+  }
 }
 
 public void keyEvent(KeyEvent event) {
