@@ -2,6 +2,7 @@ public class Block {
   ArrayList<Wall> walls;
   final int SIZE = 100;
   int l, r, t, b;
+  int tol = 2;
 
   public Block(int x, int y) {
     l = x;
@@ -18,11 +19,11 @@ public class Block {
   }
 
   public Block withinBlock(Player p) {
-    if (p.pos.x > l && p.pos.x < r && p.pos.y > t && p.pos.y < b) return this;
+    if (p.pos.x > l - tol && p.pos.x < r + tol && p.pos.y > t - tol && p.pos.y < b + tol) return this;
     else return null;
   }
 
-  public Wall closestEdge(PVector p) {
+  public int closestEdge(PVector p) {
     int index = 0;
     int i = 0;
     float min = 9999999;
@@ -37,7 +38,7 @@ public class Block {
       i++;
     }
 
-    return walls.get(index);
+    return index;
   }
 
   float lineDistance(PVector start, PVector end, PVector point) {

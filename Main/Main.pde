@@ -8,6 +8,7 @@ static float speed = 1.5;
 
 ArrayList<Wall> walls;
 ArrayList<Block> blocks;
+ArrayList<Enemy> enemies;
 Ray ray;
 Player player;
 int sceneW, sceneH;
@@ -28,6 +29,7 @@ void setup() {
 
   walls = new ArrayList<Wall>();
   blocks = new ArrayList<Block>();
+  enemies = new ArrayList<Enemy>();
 
   walls.add(new Wall(0, 0, sceneW, 0));
   walls.add(new Wall(sceneW, 0, sceneW, height));
@@ -56,6 +58,8 @@ void setup() {
       }
     }
   }
+  
+  enemies.add(new Enemy(new PVector(250, 250), new PVector(1, 0)));
 
   player = new Player();
   player.update(100, 100);
@@ -64,17 +68,18 @@ void setup() {
 void draw() {
   background(0);
 
-
   // show all walls
   for (Wall wall : walls) {
     wall.show();
   }
-
-
+  for (Enemy enemy : enemies) {
+    enemy.show();
+  }
   player.show();
+  
+  
   ArrayList<Float> scene = player.cast(walls);
   float w = (width / 2) / scene.size();
-
   // render what the rays see
   push();
   translate(sceneW, 0);
@@ -97,12 +102,7 @@ void draw() {
   if (keys.containsKey('d') && keys.get('d')) player.move(0, speed);
   if (keys.containsKey('j') && keys.get('j')) player.rotate(-0.05);
   if (keys.containsKey('l') && keys.get('l')) player.rotate(0.05);
-
-  Block inThis;
-  for (Block b : blocks) {
-    inThis = b.withinBlock(player);
-    print(inThis);
-  }
+  player.collis(blocks);
 }
 
 public void keyEvent(KeyEvent event) {
