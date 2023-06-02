@@ -10,10 +10,8 @@ class Player {
     pos = new PVector(width/2, height/2);
     rays = new ArrayList<Ray>();
     heading = 0;
-    
-    
-    // if extra time, add adjusted ray headings
-    for (float ang = -FOV / 2; ang < FOV / 2; ang += ANGLE_INCREMENT) {
+
+    for (float ang = -FOV / 2; ang < FOV / 2; ang += (ANGLE_INCREMENT)) {
       rays.add(new Ray(pos, radians(ang)));
     }
   }
@@ -41,12 +39,12 @@ class Player {
   // cast to an ArrayList of walls
   ArrayList<Float> cast(ArrayList<Wall> walls) {
     ArrayList<Float> scene = new ArrayList<Float>();
-    
+
     // for each ray that the player casts:
     for (Ray ray : rays) {
       PVector intersect = null;
       PVector closest = null;
-      
+
       // super big number that will never be smaller than a distance
       float minDist = 34028234663852885981170418348451692544.0;
 
@@ -107,15 +105,22 @@ class Player {
     for (Block b : blocks) {
       if (b.withinBlock(this) != null) {
         if (b.closestEdge(pos) == 0) { // left
-           pos.x = b.l - b.tol;
+          pos.x = b.l - b.tol;
         } else if (b.closestEdge(pos) == 1) { // right
-           pos.x = b.r + b.tol;
+          pos.x = b.r + b.tol;
         } else if (b.closestEdge(pos) == 2) { // top
-           pos.y = b.t - b.tol;
+          pos.y = b.t - b.tol;
         } else if (b.closestEdge(pos) == 3) { // bottom
-           pos.y = b.b + b.tol;
+          pos.y = b.b + b.tol;
         }
       }
     }
+  }
+  
+  void shoot(ArrayList<Enemy> enemies) {
+     Ray bullet = new Ray(pos, new PVector(cos(radians(heading)), sin(radians(heading))));
+     for (Enemy e : enemies) {
+        bullet.cast(e);
+     }
   }
 }

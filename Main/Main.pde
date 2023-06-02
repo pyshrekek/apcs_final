@@ -19,6 +19,7 @@ private PApplet applet;
 
 void setup() {
   size(1600, 800);
+  smooth(8);
 
   this.applet = this;
   applet.registerMethod("keyEvent", this);
@@ -102,7 +103,9 @@ void draw() {
   if (keys.containsKey('d') && keys.get('d')) player.move(0, speed);
   if (keys.containsKey('j') && keys.get('j')) player.rotate(-0.05);
   if (keys.containsKey('l') && keys.get('l')) player.rotate(0.05);
+  if (keys.containsKey('f') && keys.get('f')) player.shoot(enemies);
   player.collis(blocks);
+  println("co");
 }
 
 public void keyEvent(KeyEvent event) {

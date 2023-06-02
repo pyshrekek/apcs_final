@@ -6,20 +6,20 @@ class Ray {
     dir = new PVector(1, 0);
   }
 
-  public Ray(PVector v) {
-    pos = v;
+  public Ray(PVector pos) {
+    this.pos = pos;
     dir = new PVector(1, 0);
   }
 
   // angle in radians
-  public Ray(PVector v, float angle) {
-    pos = v;
+  public Ray(PVector pos, float angle) {
+    this.pos = pos;
     dir = new PVector(cos(angle), sin(angle));
   }
 
-  public Ray(PVector v, PVector head) {
-    pos = v;
-    dir = head;
+  public Ray(PVector pos, PVector dir) {
+    this.pos = pos;
+    this.dir = dir;
   }
 
   void show() {
@@ -64,6 +64,15 @@ class Ray {
     } else {
       return null;
     }
+  }
+  
+  void cast(Enemy enemy) {
+    println("CASTING");
+    PVector end = new PVector(this.pos.x + this.dir.x * 9999, this.pos.y + this.dir.y * 9999);
+     if (lineDistance(pos, end, enemy.pos) < 100) {
+       enemy.hurt(25);
+       println("HIT");
+     }
   }
 
   void setDir(float x, float y) {
