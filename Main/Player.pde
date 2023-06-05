@@ -156,6 +156,7 @@ class Player {
   void shoot(ArrayList<Enemy> enemies, ArrayList<Block> blocks) {
     Ray bullet = new Ray(pos, heading);
     boolean blockHit = false;
+    bang.play();
     image(muzzleFlash, width*.75, height/2, width/6, height/6);
     for (Block b : blocks) {
       if (blockHit) return;

@@ -1,6 +1,10 @@
 import processing.event.KeyEvent;
 import java.util.HashMap;
 import processing.core.*;
+import processing.sound.*;
+
+SoundFile bang;
+SoundFile boom;
 
 static int[][] map;
 static float speed = 1.5;
@@ -18,6 +22,8 @@ void setup() {
   size(1600, 800);
   smooth(8);
   imageMode(CENTER);
+  bang = new SoundFile(this, "sounds/bang.wav");
+  boom = new SoundFile(this, "sounds/boom.wav");
 
   this.applet = this;
   applet.registerMethod("keyEvent", this);
@@ -83,7 +89,7 @@ void draw() {
   for (int i : toRemoveEnemies) {
     fill(255, 0, 0);
     rect(width/2, 0, width, height);
-    walls.remove(enemies.get(i).wall); 
+    walls.remove(enemies.get(i).wall);
     enemies.remove(i);
   }
   ArrayList<Integer> toRemoveBlocks = checkBlockHP(blocks);
@@ -91,7 +97,7 @@ void draw() {
     fill(0, 255, 0);
     rect(width/2, 0, width, height);
     for (Wall w : blocks.get(i).walls) {
-       walls.remove(w);
+      walls.remove(w);
     }
     blocks.remove(i);
   }
@@ -114,7 +120,7 @@ void draw() {
     rect(i * w + w / 2, height/2, w, h);
   }
   pop();
-  
+
   stroke(0, 255, 0);
   line(width*.75 - 10, height/2, width*.75 + 10, height/2);
   line(width*.75, height/2 - 10, width*.75, height/2 + 10);
@@ -125,7 +131,10 @@ void draw() {
   if (keys.containsKey('d') && keys.get('d')) player.move(0, speed);
   if (keys.containsKey('j') && keys.get('j')) player.rotate(-0.05);
   if (keys.containsKey('l') && keys.get('l')) player.rotate(0.05);
-  if (keys.containsKey('f') && keys.get('f')) player.shoot(enemies, blocks);
+  if (keys.containsKey(' ') && keys.get(' ')) {
+    player.shoot(enemies, blocks);
+    
+  }
   player.collis(blocks);
 }
 

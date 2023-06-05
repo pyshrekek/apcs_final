@@ -17,7 +17,7 @@ public class Block {
     walls.add(new Wall(x + SIZE, y + SIZE, x + SIZE, y)); // r
     walls.add(new Wall(x, y, x + SIZE, y)); // t
     walls.add(new Wall(x + SIZE, y + SIZE, x, y + SIZE)); /// b
-    hp = 1000;
+    hp = 400;
   }
 
   public Block withinBlock(Player p) {
@@ -52,6 +52,7 @@ ArrayList<Integer> checkBlockHP(ArrayList<Block> blocks) {
   ArrayList<Integer> indices = new ArrayList<>();
   for (int i = 0; i < blocks.size(); i++) {
     if (blocks.get(i).hp <= 0) {
+      boom.play();
       indices.add(i);
     }
   }
