@@ -69,12 +69,16 @@ class Ray {
   void cast(Enemy enemy) {
     println("CASTING");
     PVector end = new PVector(this.pos.x + this.dir.x * 9999, this.pos.y + this.dir.y * 9999);
-     if (lineDistance(pos, end, enemy.pos) < 100) {
+     if (lineDistance(pos, end, enemy.pos) < 150) {
        enemy.hurt(25);
        println("HIT");
      }
   }
-
+  
+  void shootWall(Wall wall) {
+     
+  }
+  
   void setDir(float x, float y) {
     this.dir.x = x - this.pos.x;
     this.dir.y = y - this.pos.y;

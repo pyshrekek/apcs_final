@@ -3,6 +3,7 @@ public class Block {
   final int SIZE = 100;
   int l, r, t, b;
   int tol = 2;
+  float hp;
 
   public Block(int x, int y) {
     l = x;
@@ -16,6 +17,7 @@ public class Block {
     walls.add(new Wall(x + SIZE, y + SIZE, x + SIZE, y)); // r
     walls.add(new Wall(x, y, x + SIZE, y)); // t
     walls.add(new Wall(x + SIZE, y + SIZE, x, y + SIZE)); /// b
+    hp = 1000;
   }
 
   public Block withinBlock(Player p) {
@@ -40,4 +42,19 @@ public class Block {
 
     return index;
   }
+
+  void hurt(float amount) {
+    hp -= amount;
+  }
+}
+
+ArrayList<Integer> checkBlockHP(ArrayList<Block> blocks) {
+  ArrayList<Integer> indices = new ArrayList<>();
+  for (int i = 0; i < blocks.size(); i++) {
+    if (blocks.get(i).hp <= 0) {
+      indices.add(i);
+    }
+  }
+
+  return indices;
 }

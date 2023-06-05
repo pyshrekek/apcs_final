@@ -1,11 +1,11 @@
 class Player {
   private static final float ANGLE_INCREMENT = .25;
   private static final int FOV = 40;
+  private final PImage muzzleFlash = loadImage("muzzleFlash.png");
   PVector pos;
   ArrayList<Ray> rays;
   float heading;
-
-
+  
   public Player() {
     pos = new PVector(width/2, height/2);
     rays = new ArrayList<Ray>();
@@ -72,6 +72,42 @@ class Player {
     return scene;
   }
 
+  // cast to an ArrayList of enemies
+  ArrayList<Float> castEnemy(ArrayList<Enemy> enemies) {
+    ArrayList<Float> scene = new ArrayList<Float>();
+
+    // for each ray that the player casts:
+    for (Ray ray : rays) {
+      PVector intersect = null;
+      PVector closest = null;
+
+      // super big number that will never be smaller than a distance
+      float minDist = 34028234663852885981170418348451692544.0;
+
+      // for each wall that a ray may/may not hit:
+      for (Enemy e : enemies) {
+        intersect = ray.cast(e.wall);
+        if (intersect != null) {
+          float dist = dist(pos.x, pos.y, intersect.x, intersect.y);
+          float ang = ray.dir.heading() - this.heading;
+          dist *= cos(ang); // cosine correction
+          if (dist < minDist) {
+            minDist = dist;
+            closest = intersect;
+          }
+        }
+      }
+
+      if (closest != null) {
+        stroke(255, 0, 0, 50);
+        line(pos.x, pos.y, closest.x, closest.y);
+      }
+      scene.add(minDist);
+    }
+
+    return scene;
+  }
+
   void rotate(float angle) {
     this.heading += angle;
     for (int i = 0; i < rays.size(); i++) {
@@ -116,11 +152,23 @@ class Player {
       }
     }
   }
-  
-  void shoot(ArrayList<Enemy> enemies) {
-     Ray bullet = new Ray(pos, new PVector(cos(radians(heading)), sin(radians(heading))));
-     for (Enemy e : enemies) {
-        bullet.cast(e);
-     }
+
+  void shoot(ArrayList<Enemy> enemies, ArrayList<Block> blocks) {
+    Ray bullet = new Ray(pos, heading);
+    boolean blockHit = false;
+    image(muzzleFlash, width*.75, height/2, width/6, height/6);
+    for (Block b : blocks) {
+      if (blockHit) return;
+      for (Wall w : b.walls) {
+        if (blockHit) return;
+        if (bullet.cast(w) != null) {
+          blockHit = true;
+          b.hurt(25);
+        }
+      }
+    }
+    for (Enemy e : enemies) {
+      bullet.cast(e);
+    }
   }
 }

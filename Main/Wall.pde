@@ -1,5 +1,6 @@
 class Wall {
   PVector start, end;
+  boolean enemy;
 
   public Wall(float x1, float y1, float x2, float y2) {
     start = new PVector(x1, y1);

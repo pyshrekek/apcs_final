@@ -1,7 +1,7 @@
 import processing.event.KeyEvent;
 import java.util.HashMap;
 import processing.core.*;
-
+import processing.sound.*;
 
 static int[][] map;
 static float speed = 1.5;
@@ -15,11 +15,10 @@ int sceneW, sceneH;
 HashMap<Character, Boolean> keys;
 private PApplet applet;
 
-
-
 void setup() {
   size(1600, 800);
   smooth(8);
+  imageMode(CENTER);
 
   this.applet = this;
   applet.registerMethod("keyEvent", this);
@@ -59,8 +58,12 @@ void setup() {
       }
     }
   }
-  
+
   enemies.add(new Enemy(new PVector(250, 250), new PVector(1, 0)));
+
+  for (Enemy e : enemies) {
+    walls.add(e.wall);
+  }
 
   player = new Player();
   player.update(100, 100);
@@ -77,9 +80,25 @@ void draw() {
     enemy.show();
   }
   player.show();
-  
-  
+  ArrayList<Integer> toRemoveEnemies = checkHP(enemies);
+  for (int i : toRemoveEnemies) {
+    fill(255, 0, 0);
+    rect(width/2, 0, width, height);
+    walls.remove(enemies.get(i).wall); 
+    enemies.remove(i);
+  }
+  ArrayList<Integer> toRemoveBlocks = checkBlockHP(blocks);
+  for (int i : toRemoveBlocks) {
+    fill(0, 255, 0);
+    rect(width/2, 0, width, height);
+    for (Wall w : blocks.get(i).walls) {
+       walls.remove(w);
+    }
+    blocks.remove(i);
+  }
+
   ArrayList<Float> scene = player.cast(walls);
+
   float w = (width / 2) / scene.size();
   // render what the rays see
   push();
@@ -96,6 +115,10 @@ void draw() {
     rect(i * w + w / 2, height/2, w, h);
   }
   pop();
+  
+  stroke(0, 255, 0);
+  line(width*.75 - 10, height/2, width*.75 + 10, height/2);
+  line(width*.75, height/2 - 10, width*.75, height/2 + 10);
 
   if (keys.containsKey('w') && keys.get('w')) player.move(speed, 0);
   if (keys.containsKey('s') && keys.get('s')) player.move(-speed, 0);
@@ -103,9 +126,8 @@ void draw() {
   if (keys.containsKey('d') && keys.get('d')) player.move(0, speed);
   if (keys.containsKey('j') && keys.get('j')) player.rotate(-0.05);
   if (keys.containsKey('l') && keys.get('l')) player.rotate(0.05);
-  if (keys.containsKey('f') && keys.get('f')) player.shoot(enemies);
+  if (keys.containsKey('f') && keys.get('f')) player.shoot(enemies, blocks);
   player.collis(blocks);
-  println("co");
 }
 
 public void keyEvent(KeyEvent event) {
