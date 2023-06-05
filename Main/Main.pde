@@ -1,7 +1,6 @@
 import processing.event.KeyEvent;
 import java.util.HashMap;
 import processing.core.*;
-import processing.sound.*;
 
 static int[][] map;
 static float speed = 1.5;

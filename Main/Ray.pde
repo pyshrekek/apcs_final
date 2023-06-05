@@ -75,10 +75,6 @@ class Ray {
      }
   }
   
-  void shootWall(Wall wall) {
-     
-  }
-  
   void setDir(float x, float y) {
     this.dir.x = x - this.pos.x;
     this.dir.y = y - this.pos.y;
