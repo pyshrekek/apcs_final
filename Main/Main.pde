@@ -7,7 +7,7 @@ SoundFile bang;
 SoundFile boom;
 
 static int[][] map;
-static float speed = 1.5;
+static final float speed = 1.5;
 
 ArrayList<Wall> walls;
 ArrayList<Block> blocks;
@@ -16,6 +16,7 @@ Ray ray;
 Player player;
 int sceneW, sceneH;
 HashMap<Character, Boolean> keys;
+boolean started;
 private PApplet applet;
 
 void setup() {
@@ -31,6 +32,8 @@ void setup() {
 
   sceneW = width/2;
   sceneH = height;
+
+  started = false;
 
   walls = new ArrayList<Wall>();
   blocks = new ArrayList<Block>();
@@ -75,67 +78,89 @@ void setup() {
 }
 
 void draw() {
-  background(0);
+  if (!started) {
+    frameRate(60);
+    background(0);
+    textSize(60);
+    fill(255);
+    text("wolfenstein 2.5d in 2023", 100, 100);
+    textSize(24);
+    text("by BALLIN studios (daniel haokun xu)", 100, 130);
+    text("WASD to move | Left/right arrows to turn | SPACE to shoot", 100, 200);
 
-  // show all walls
-  for (Wall wall : walls) {
-    wall.show();
-  }
-  for (Enemy enemy : enemies) {
-    enemy.show();
-  }
-  player.show();
-  ArrayList<Integer> toRemoveEnemies = checkHP(enemies);
-  for (int i : toRemoveEnemies) {
-    fill(255, 0, 0);
-    rect(width/2, 0, width, height);
-    walls.remove(enemies.get(i).wall);
-    enemies.remove(i);
-  }
-  ArrayList<Integer> toRemoveBlocks = checkBlockHP(blocks);
-  for (int i : toRemoveBlocks) {
-    fill(0, 255, 0);
-    rect(width/2, 0, width, height);
-    for (Wall w : blocks.get(i).walls) {
-      walls.remove(w);
+    if (mouseY > height/2) {
+      textSize(200);
+      fill(230);
+      if (mousePressed) {
+        started = true; 
+      }
+    } else {
+      textSize(100);
+    } 
+    text("START", 650, 600);
+  } else {
+    frameRate(60);
+    background(0);
+
+    // show all walls
+    for (Wall wall : walls) {
+      wall.show();
     }
-    blocks.remove(i);
+    for (Enemy enemy : enemies) {
+      enemy.show();
+    }
+    player.show();
+    ArrayList<Integer> toRemoveEnemies = checkHP(enemies);
+    for (int i : toRemoveEnemies) {
+      fill(255, 0, 0);
+      rect(width/2, 0, width, height);
+      walls.remove(enemies.get(i).wall);
+      enemies.remove(i);
+    }
+    ArrayList<Integer> toRemoveBlocks = checkBlockHP(blocks);
+    for (int i : toRemoveBlocks) {
+      fill(0, 255, 0);
+      rect(width/2, 0, width, height);
+      for (Wall w : blocks.get(i).walls) {
+        walls.remove(w);
+      }
+      blocks.remove(i);
+    }
+
+    ArrayList<Float> scene = player.cast(walls);
+
+    float w = (width / 2) / scene.size();
+    // render what the rays see
+    push();
+    translate(sceneW, 0);
+    for (int i = 0; i < scene.size(); i++) {
+      noStroke();
+      float sq = scene.get(i)*scene.get(i);
+      float widthSq = (sceneW)*(sceneW);
+      float fill = map(sq, 0, widthSq, 230, 0);
+      float h = map(scene.get(i), 0, sceneW + 1, height, 0);
+      fill(fill);
+      rectMode(CENTER);
+
+      rect(i * w + w / 2, height/2, w, h);
+    }
+    pop();
+
+    stroke(0, 255, 0);
+    line(width*.75 - 10, height/2, width*.75 + 10, height/2);
+    line(width*.75, height/2 - 10, width*.75, height/2 + 10);
+
+    if (keys.containsKey('w') && keys.get('w')) player.move(speed, 0);
+    if (keys.containsKey('s') && keys.get('s')) player.move(-speed, 0);
+    if (keys.containsKey('a') && keys.get('a')) player.move(0, -speed);
+    if (keys.containsKey('d') && keys.get('d')) player.move(0, speed);
+    if (keys.containsKey('j') && keys.get('j')) player.rotate(-0.05);
+    if (keys.containsKey('l') && keys.get('l')) player.rotate(0.05);
+    if (keys.containsKey(' ') && keys.get(' ')) {
+      player.shoot(enemies, blocks);
+    }
+    player.collis(blocks);
   }
-
-  ArrayList<Float> scene = player.cast(walls);
-
-  float w = (width / 2) / scene.size();
-  // render what the rays see
-  push();
-  translate(sceneW, 0);
-  for (int i = 0; i < scene.size(); i++) {
-    noStroke();
-    float sq = scene.get(i)*scene.get(i);
-    float widthSq = (sceneW)*(sceneW);
-    float fill = map(sq, 0, widthSq, 230, 0);
-    float h = map(scene.get(i), 0, sceneW + 1, height, 0);
-    fill(fill);
-    rectMode(CENTER);
-
-    rect(i * w + w / 2, height/2, w, h);
-  }
-  pop();
-
-  stroke(0, 255, 0);
-  line(width*.75 - 10, height/2, width*.75 + 10, height/2);
-  line(width*.75, height/2 - 10, width*.75, height/2 + 10);
-
-  if (keys.containsKey('w') && keys.get('w')) player.move(speed, 0);
-  if (keys.containsKey('s') && keys.get('s')) player.move(-speed, 0);
-  if (keys.containsKey('a') && keys.get('a')) player.move(0, -speed);
-  if (keys.containsKey('d') && keys.get('d')) player.move(0, speed);
-  if (keys.containsKey('j') && keys.get('j')) player.rotate(-0.05);
-  if (keys.containsKey('l') && keys.get('l')) player.rotate(0.05);
-  if (keys.containsKey(' ') && keys.get(' ')) {
-    player.shoot(enemies, blocks);
-    
-  }
-  player.collis(blocks);
 }
 
 public void keyEvent(KeyEvent event) {
