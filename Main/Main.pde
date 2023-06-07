@@ -3,8 +3,10 @@ import java.util.HashMap;
 import processing.core.*;
 import processing.sound.*;
 
+SoundFile glimpse;
 SoundFile bang;
 SoundFile boom;
+SoundFile pluh;
 
 static int[][] map;
 static final float speed = 1.5;
@@ -23,8 +25,12 @@ void setup() {
   size(1600, 800);
   smooth(8);
   imageMode(CENTER);
+  glimpse = new SoundFile(this, "sounds/glimpse.mp3");
   bang = new SoundFile(this, "sounds/bang.wav");
   boom = new SoundFile(this, "sounds/boom.wav");
+  pluh = new SoundFile(this, "sounds/pluh.mp3");
+  
+  glimpse.jump(58);
 
   this.applet = this;
   applet.registerMethod("keyEvent", this);
