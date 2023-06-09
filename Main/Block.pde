@@ -17,7 +17,7 @@ public class Block {
     walls.add(new Wall(x + SIZE, y + SIZE, x + SIZE, y)); // r
     walls.add(new Wall(x, y, x + SIZE, y)); // t
     walls.add(new Wall(x + SIZE, y + SIZE, x, y + SIZE)); /// b
-    hp = 400;
+    hp = 200;
   }
 
   public Block withinBlock(Player p) {

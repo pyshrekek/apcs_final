@@ -6,6 +6,7 @@ import processing.sound.*;
 SoundFile glimpse;
 SoundFile bang;
 SoundFile boom;
+SoundFile waah;
 SoundFile pluh;
 
 static int[][] map;
@@ -19,6 +20,7 @@ Player player;
 int sceneW, sceneH;
 HashMap<Character, Boolean> keys;
 boolean started;
+int cooldown;
 private PApplet applet;
 
 void setup() {
@@ -26,10 +28,11 @@ void setup() {
   smooth(8);
   imageMode(CENTER);
   glimpse = new SoundFile(this, "sounds/glimpse.mp3");
+  glimpse.amp(.7);
   bang = new SoundFile(this, "sounds/bang.wav");
   boom = new SoundFile(this, "sounds/boom.wav");
+  waah = new SoundFile(this, "sounds/waah.wav");
   pluh = new SoundFile(this, "sounds/pluh.mp3");
-  
   glimpse.jump(58);
 
   this.applet = this;
@@ -38,6 +41,8 @@ void setup() {
 
   sceneW = width/2;
   sceneH = height;
+  
+  cooldown = 0;
 
   started = false;
 
@@ -74,6 +79,9 @@ void setup() {
   }
 
   enemies.add(new Enemy(new PVector(250, 250), new PVector(1, 0)));
+  enemies.add(new Enemy(new PVector(500, 750), new PVector(1, 0)));
+  enemies.add(new Enemy(new PVector(350, 700), new PVector(1, 0)));
+  enemies.add(new Enemy(new PVector(650, 600), new PVector(1, 0)));
 
   for (Enemy e : enemies) {
     walls.add(e.wall);
@@ -98,15 +106,20 @@ void draw() {
       textSize(200);
       fill(230);
       if (mousePressed) {
-        started = true; 
+        glimpse.stop();
+        started = true;
       }
     } else {
+      if (mousePressed) {
+        pluh.play();
+      }
       textSize(100);
-    } 
+    }
     text("START", 650, 600);
   } else {
     frameRate(60);
     background(0);
+    cooldown--;
 
     // show all walls
     for (Wall wall : walls) {
@@ -162,8 +175,9 @@ void draw() {
     if (keys.containsKey('d') && keys.get('d')) player.move(0, speed);
     if (keys.containsKey('j') && keys.get('j')) player.rotate(-0.05);
     if (keys.containsKey('l') && keys.get('l')) player.rotate(0.05);
-    if (keys.containsKey(' ') && keys.get(' ')) {
+    if (keys.containsKey(' ') && keys.get(' ') && cooldown <= 0) {
       player.shoot(enemies, blocks);
+      cooldown = 15;
     }
     player.collis(blocks);
   }

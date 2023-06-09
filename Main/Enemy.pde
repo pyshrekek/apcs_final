@@ -6,7 +6,7 @@ class Enemy {
   public Enemy(PVector pos, PVector dir) {
     this.pos = pos;
     this.dir = dir;
-    hp = 1000;
+    hp = 100;
     wall = new Wall(pos.x-5, pos.y, pos.x+5, pos.y);
   }
 
@@ -24,6 +24,7 @@ ArrayList<Integer> checkHP(ArrayList<Enemy> enemies) {
   ArrayList<Integer> indices = new ArrayList<>();
   for (int i = 0 ; i < enemies.size() ; i++) {
     if (enemies.get(i).hp <= 0) {
+      waah.play();
       indices.add(i);
     }
   }
